@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flag Handler</title>
+    {% load staticfiles %}
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'jquery/jquery-1.11.3.min.js' %}"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        var present_time=5;
+        var tagged=document.getElementById("lipid");
+        function close_window(){
+            present_time--;
+            document.getElementById("lipid").innerHTML=present_time;
+            if(present_time>0){
+                setInterval(close_window,1000);
+            }else{
+                document.write("<html><br><br><br><br><center><h4>For Security Reasons Data in this window is deleted.</h4><br><strong>Please close the Window.</strong><hr><code>&copy; DSign. All Rights Reserved</code></center></html>");
+            }
+        }
+    </script>
+</head>
+<body style="background-color: lawngreen;">
+    <header>
+        <div class="container">
+            <h3 class="text-success text-center" style="font-family: 'Satisfy', cursive"><span class="glyphicon glyphicon-leaf"></span> DSign</h3>
+        </div>
+    </header>
+    <div class="container">
+        <div class="well">
+            <h3 class="text-danger"><span class="glyphicon glyphicon-flag"></span> Flag Window</h3>
+            <hr>
+            {% if status %}
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                       $("#flag_submit").click(function(){
+                            var reason=$("#flag-reason").val();
+                            $.ajax({
+                                type:'POST',
+                                url:"{% url 'winker:flag_raiser' %}",
+                                data:{
+                                    'key':"{{ key }}",
+                                    'flag_reason':reason,
+                                    'csrfmiddlewaretoken':"{{ csrf_token }}"
+                                },
+                                dataType:'json',
+                                success:function(data){
+                                    if(data.report){
+                                        window.opener.process(key="{{ key }}");
+                                        window.opener.flagged=1;
+                                        window.close();
+                                    }else{
+                                        var present_value=3;
+                                        var something=$("#lipid");
+                                        function close_window(){
+                                            if(present_value==0){
+                                                window.opener.alert("Flagging Process Failed");
+                                                window.close();
+                                            }else{
+                                                something.innerHTML=present_value;
+                                                present_value-=1;
+                                            }
+                                        }
+                                        $("#dead_screen").fadeIn();
+                                        //setInterval(close_window,1000);
+                                        something.append("this");
+                                    }
+                                }
+                            })
+                        });
+                    });
+                </script>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        Reason of raising objection
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-info">
+                            <h4><span class="glyphicon glyphicon-info-sign"></span> Please Note.</h4>
+                            <p>The <b>Reason of Objection</b> you enter here will be visible publically.</p>
+                        </div>
+                        <form class="form-group">
+                           <label for="#flag-reason"> Reason:</label>
+                            <br>
+                            <textarea id="flag-reason" name="flag_reason" class="form-control">Enter the reason for Raising Flag</textarea>
+                            <br>
+                            <button id="flag_submit" class="btn btn-warning" onclick="return false;">Raise Flag</button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                {% if user %}
+                    <div class="alert alert-danger">
+                        <h4><span class="glyphicon glyphicon-fire"></span> Invalid Request</h4>
+                        <p>Sorry, this signature is already <b>Flagged</b></p>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            setTimeout($("#dead_screen").fadeIn(),1000);
+                            close_window();
+                        });
+                    </script>
+                {% else %}
+                    <div class="alert alert-danger">
+                        <h4><span class="glyphicon glyphicon-fire"></span> Unauthorised Request</h4>
+                        <p>Sorry, you are not authorised for this operation.</p>
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            setTimeout($("#dead_screen").fadeIn(),1000);
+                            close_window();
+                        });
+                    </script>
+                {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+    <div id="dead_screen" class="popup-control" hidden>
+        <div class="container">
+            <div class="well" style="margin-top:20%;">
+                <div class="alert alert-danger">
+                    <h2><span class="glyphicon glyphicon-fire"></span> Sorry!</h2>
+                    <hr>
+                    <h3><span class="glyphicon glyphicon-flag"></span> Flag process failed.</h3>
+                    <code class="text-center">Service Window will close in <strong id="lipid"></strong> seconds.</code>
+                </div>
+                <div class="text-center"><span class="glyphicon glyphicon-copyright-mark"></span> Project DSign. All Rights Reserved.</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

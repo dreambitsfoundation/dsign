@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if Log %}{{ Log }}{% else %}Dsign{% endif %}</title>
+    {% load staticfiles %}
+    <link rel="shortcut icon" type="image/png" href="#"/>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'jquery/jquery-1.11.3.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
+
+    {% block script %}{% endblock %}
+    {% block stylesheet %}{% endblock %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#q_submit").click(function(){
+                var code=$("#q").val();
+                window.location="/"+code+"/";
+            })
+        })
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+
+        <!-- Header -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand text-success" href="{% if Log %}{% url 'winker:user_profile' %}{% else %}{% url 'winker:index' %}{% endif %}" style="color:greenyellow"><span class="glyphicon glyphicon-leaf"></span> DSign</a>
+        </div>
+
+        <!-- Items -->
+        <div class="collapse navbar-collapse" id="topNavBar">
+            <ul class="nav navbar-nav">
+                <li class="{% block pricing_active %}{% endblock %}"><a href="#"><span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span>&nbsp; Pricing</a></li>
+                <li class="{% block documentation_active %}{% endblock %}"><a href="#"><span class="glyphicon glyphicon-file" aria-hidden="true"></span>&nbsp; Documentation</a></li>
+                <li class="{% block api_active %}{% endblock %}"><a href="#"><span class="glyphicon glyphicon-console" aria-hidden="true"></span>&nbsp; API</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search" method="get" action="#">
+                <div class="form-group">
+                    <input type="text" id="q" class="form-control" name="q" value="" placeholder="Search by Signture Code">
+                </div>
+                <button type="submit" id="q_submit" onclick="return false;" class="btn btn-primary">Search</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                {% if Log %}
+                    <li class="active">
+                        <a href="{% url 'winker:user_profile' %}">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp; {{ Log }}
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <a href="{% if Log %}{% url 'winker:logout' %}{% else %}{% url 'winker:login' %}{% endif %}">
+                        <span class="glyphicon glyphicon-off {% if Log %}logged{% endif %}" aria-hidden="true"></span>&nbsp; {% if Log %}Logout{% else %}Login{% endif %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+<div class="popup-control" hidden>
+    <div class="container" style="z-index:7">
+        <div class="well" style="background-color: white; margin-top:2%;">
+            <h3 class="text-center text-success" style="font-family: 'Satisfy', cursive"><span class="glyphicon glyphicon-leaf"></span> DSign</h3>
+            <hr>
+            <div class=" alert alert-danger">
+                <h3><span class="glyphicon glyphicon-fire"></span> Setup Error. <code>Error: Pop-ups Blocked</code></h3>
+                <hr>
+
+                <p>This website uses <b>Pop Up Windows</b> to function.</p>
+                <p>Always allow <b>Pop-ups</b> for this site.</p>
+                <br>
+                <div class="alert alert-info">
+                    <b>Google Chrome</b> users:
+                    <br>
+                    Type in your browser:
+                    <code>chrome://settings/contentExceptions#popups</code>
+                    <br>
+                    Add <code>127.0.0.1:8000</code> to exception list and click <b>Done</b>.
+                    <hr>
+                    <b>Firefox</b> users:
+                    <br>
+                    Goto <pre><code><b>Menu</b>&gt;<b>Options</b>&gt;<b>Pop-ups</b>&gt;<b>Exceptions</b>&gt;Add <code>127.0.0.1:8000</code></code></pre> Then Click <b>Allow</b>
+                    <hr>
+                    Other Users follow your browser documentation about <b>"How to enable Pop-ups in your browser"</b>.
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% block body %}
+{% endblock %}
+
+<br><br><br>
+<footer class="footer">
+    <div class="container">
+        <br>
+        &copy; Agiloscope Inc.
+        <hr>
+        <div class="col-sm-3">About Us</div>
+        <div class="col-sm-3">Our Mission</div>
+        <div class="col-sm-3">Contact Us</div>
+        <div class="col-sm-3">Career</div>
+    </div>
+    <br><br><br>
+</footer>
+</body>
+</html>

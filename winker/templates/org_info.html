@@ -1,0 +1,96 @@
+{% extends 'org_view.html' %}
+{% block page_content %}
+    <div class="well">
+        <h4 class="text-center"><span class="glyphicon glyphicon-briefcase"></span> <strong>{{ org.name }}</strong></h4>
+        <hr>
+        <div class="">
+            <blockquote>
+                <b>Attention! </b>You have got <a href="#"><span class="label {% if notification %}label-primary{% else %}label-info{% endif %}">{{ notification }}</span></a> Notifications
+            </blockquote>
+        </div>
+        <div class="jumbotron">
+            <h5><span class="glyphicon glyphicon-info-sign"></span> <strong>Basic Information</strong></h5>
+            <hr>
+            <table class="table table-responsive table-striped">
+                <thead>
+                    <tr>
+                        <th>Header</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-tower"></span><b> Name: </b></td>
+                        <td>{{ org.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-file"></span><b> Personal Account Number (PAN): </b></td>
+                        <td>{{ org.pan }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-map-marker"></span><b> Address: </b></td>
+                        <td>{{ org.address }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-phone-alt"></span> <b> Contact Number: </b></td>
+                        <td>{{ org.phone }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-envelope"></span><b> Official Email ID:</b></td>
+                        <td>{{ org.contact_mail }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-link"></span><b> Website: </b></td>
+                        <td>{{ org.website }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-user"></span><b> Administrator:</b></td>
+                        <td>{{ org.admin }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-calendar"></span><b> Active Since:</b></td>
+                        <td>{{ org.created }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+            <a href="{% url 'winker:org_profile_update' %}" class="btn btn-primary"><span class="glyphicon glyphicon-wrench"></span> Update Organization Profile</a>
+        </div>
+        <div class="jumbotron">
+            <h5><span class="glyphicon glyphicon-qrcode"></span> Signatures</h5>
+            <hr>
+            <table class="table table-responsive table-striped">
+                <thead>
+                    <tr>
+                        <th>About</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-usd"></span><b> Total Signature Purchased:</b></td>
+                        <td>{{ org.total_signature_purchased }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-certificate"></span><b> Latest Purchase:</b></td>
+                        <td>{{ org.latest_signature_purchase }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-piggy-bank"></span><b> Total Signatures Left:</b></td>
+                        <td>{{ org.signatures_left }}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-ok"></span><b> Total Signatures Used: </b></td>
+                        <td>{{ org.signatures_used }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+            <div class="row">
+                <a href="#" class="btn btn-warning"><span class="glyphicon glyphicon-credit-card"></span> Purchase More Signatures</a>
+                <a href="#" class="btn btn-success"><span class="glyphicon glyphicon-tasks"></span> Manage Signatures</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'profile.html' %}
+
+{% block page_content %}
+
+    <div class="well">
+        <h1>Update Profile Info</h1>
+        <hr>
+        <div class="alert alert-info">
+            <span class="glyphicon glyphicon-info-sign"></span> In order to maintain the authenticity of your account we allow you to update only selective elements.
+        </div>
+        <div class="jumbotron">
+        {% if error_message %}
+        <div class="alert alert-danger">
+            <span class="glyphicon glyphicon-fire"></span> <b>Oops!</b> {{ error_message }}
+        </div>
+        {% endif %}
+        <label class="col-sm-offset-1" for="username">Username:</label><span id="username"> {{ Log }}</span>
+        <br>
+        <label class="col-sm-offset-1" for="pan">PAN:</label><span id="pan">{{ pan }}</span>
+        <br>
+        <br>
+
+            <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="id_email">Email:</label>
+                    <div class="col-sm-10">
+                        <input id="id_email" class="form-control" maxlength="30" type="email" name="email" value="{{ email }}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="id_phone">Phone:</label>
+                    <div class="col-sm-10">
+                        <input id="id_phone" class="form-control" type="tel" maxlength="10" name="phone" value="{{ phone }}"/>
+                    </div>
+                </div>
+                {% if designation %}
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="id_designation">Designation:</label>
+                    <div class="col-sm-10">
+                        <input id="id_designation" class="form-control" type="text" name="designation" value="{{ designation }}"/>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-open-file"></span> Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script>
+        $(document).ready(function(){
+            $("#id_email").attr("value","{{ email }}");
+            $("#id_phone").attr("value","{{ phone }}");
+            {% if designation %}
+                $("#id_designation").attr("value","{{ designation }}");
+            {% endif %}
+        });
+        </script>
+    </div>
+{% endblock %}

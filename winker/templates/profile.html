@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block script %}
+    <script src="{% static 'profile_control.js' %}" type="text/javascript"></script>
+    <script src="{% static 'jquery.magnific-popup.js' %}" type="text/javascript"></script>
+{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'profile_control.css' %}" type="text/css"/>
+    <link rel="stylesheet" href="{% static 'magnific-popup.css' %}" type="text/css">
+{% endblock %}
+
+{% block body %}
+    <script>
+        var html="<!Doctype html><html><head onload=window.close()></head></html>";
+        var popupBlockerChecker = {
+            check: function(popup_window){
+                var _scope = this;
+                if (popup_window) {
+                    if(/chrome/.test(navigator.userAgent.toLowerCase())){
+                        setTimeout(function () {
+                            _scope._is_popup_blocked(_scope, popup_window);
+                         },200);
+                    }else{
+                        popup_window.onload = function () {
+                            _scope._is_popup_blocked(_scope, popup_window);
+                        };
+                    }
+                }else{
+                    _scope._displayError();
+                }
+            },
+            _is_popup_blocked: function(scope, popup_window){
+                if ((popup_window.innerHeight > 0)==false){ scope._displayError(); }
+            },
+            _displayError: function(){
+                $(".popup-control").fadeIn();
+                //alert("Blocker enabled. Please disable it!");
+            }
+        };
+        //var popup=window.open("");
+        //popup.write(html);
+        //popupBlockerChecker.check(popup);
+    </script>
+    <noscript>
+        <div id="noscript-dialog">
+            <center>
+                <div id="text-space">
+                    <h1 style="color:red; text-align:center;">Javascript Disabled</h1>
+                    <hr>
+                    <code>This website uses Javascript for operation and will not function without Javascript.</code>
+                    <br>
+                    <br>
+                    Please enable Javascript in your browser and Refresh this Page in order to use this website
+                    <br>
+                    <br>
+                    <span style="color:gray">&copy; Project DSign. All Rights Reserved.</span>
+                </div>
+            </center>
+        </div>
+    </noscript>
+<br>
+<br>
+<br>
+    <div class="container">
+        <div class="col-sm-2">
+            <div class="list-group" id="profile_navigation">
+                <a href="{% url 'winker:user_profile' %}" class="list-group-item profile_info {{ profile_info }}" id="nav_link"><span class="glyphicon glyphicon-home"></span> Profile Info</a>
+                <a href="{% url 'winker:user_profile_update' %}" class="list-group-item update_profile {{ update_profile }}" id="nav_link"><span class="glyphicon glyphicon-pencil"></span> Update Profile</a>
+                <a href="{% url 'winker:user_workspace' %}" class="list-group-item workspace {{ workspace }}" id="nav_link"><span class="glyphicon glyphicon-tasks"></span> Workspace</a>
+                <a href="{% url 'winker:user_settings' %}" class="list-group-item settings {{ settings }}" id="nav_link"><span class="glyphicon glyphicon-cog"></span> Settings</a>
+                <a href="{% url 'winker:user_privacy' %}" class="list-group-item privacy {{ privacy }}" id="nav_link"><span class="glyphicon glyphicon-lock"></span> Privacy</a>
+                <a href="{% url 'winker:user_signature_control' %}" class="list-group-item signature_control {{ signature_control }}" id="nav_link"><span class="glyphicon glyphicon-qrcode"></span> Signature Control</a>
+                {% if is_admin %}
+                    <a href="{% url 'winker:org_admin' %}" class="list-group-item administration {{ administration }}" id="nav_link"><span class="glyphicon glyphicon-briefcase"></span> Organization Administration</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-10">
+            {% block page_content %}{% endblock %}
+        </div>
+
+    </div>
+
+
+{% endblock %}

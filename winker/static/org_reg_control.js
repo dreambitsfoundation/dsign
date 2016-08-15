@@ -1,0 +1,48 @@
+/**
+ * Created by Gaurav on 10-07-2016.
+ */
+
+$(document).ready(function(){
+   $("#id_name").focus();
+   $("#name").addClass("active")
+   $("#id_name").focus(function(){
+       $("#name").addClass("active")
+   });
+    $("#id_contact_mail").focus(function(){
+       $("#email").addClass("active")
+   });
+    $("#id_password").focus(function(){
+       $("#password").addClass("active")
+   });
+    $("#id_phone").focus(function(){
+       $("#phone").addClass("active")
+   });
+    $("#id_pan").focus(function(){
+       $("#pan").addClass("active")
+   });
+    $("#id_address").focus(function(){
+       $("#address").addClass("active")
+   });
+    $("#id_website").focus(function(){
+       $("#website").addClass("active")
+   });
+    $("#id_name").blur(function(){
+       $("#name").removeClass("active")
+   });
+    $("#id_contact_mail").blur(function(){
+       $("#email").removeClass("active")
+   });$("#id_password").blur(function(){
+       $("#password").removeClass("active")
+   });$("#id_phone").blur(function(){
+       $("#phone").removeClass("active")
+   });$("#id_pan").blur(function(){
+       $("#pan").removeClass("active")
+   });
+    $("#id_address").blur(function(){
+       $("#address").removeClass("active")
+   });
+    $("#id_website").blur(function(){
+       $("#website").removeClass("active")
+   });
+});
+

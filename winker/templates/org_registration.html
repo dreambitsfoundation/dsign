@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block script %}<script src="{% static 'org_reg_control.js' %}"></script>{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-tree-deciduous"></span>  New Organization Registration
+                </div>
+                <div class="panel-body">
+                    {% if error_message %}
+                         <div class="alert alert-danger">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span><strong> Oops! </strong> {{ error_message }}
+                        </div>
+                    {% endif %}
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <span class="text-danger small">{{ field.errors }}</span>
+                                </div>
+                                <label class="control-label col-sm-2" for="">{{ field.label_tag }}</label>
+                                <div class="col-sm-10">{{ field }}</div>
+                             </div>
+                        {% endfor %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-log-in"></span>  Register</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="panel-footer">
+                    If you organization is already registered and you are trying to connect to that. Then please go your profile.
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="list-group">
+            <a href="#" class="list-group-item" id="name">
+                <h4 class="list-group-item-heading">Name</h4>
+                <p class="list-group-item-text">Official name of your Organization as on registered PAN assigned to your organization by Government of India - Department of Income Tax</p>
+            </a>
+            <a href="#" class="list-group-item" id="address">
+                <h4 class="list-group-item-heading">Address</h4>
+                <p class="list-group-item-text">Postal Address of Organization. Please mention your area PIN Code.</p>
+            </a>
+            <a href="#" class="list-group-item" id="email">
+                <h4 class="list-group-item-heading">Contact Mail</h4>
+                <p class="list-group-item-text">Enter an Email address to be used for all the official communications with your organization</p>
+            </a>
+            <a href="#" class="list-group-item" id="password">
+                <h4 class="list-group-item-heading">Password</h4>
+                <p class="list-group-item-text">This password would be used by you as an Administrator for your Organization Account. Should not be as same as your personal account password</p>
+            </a>
+            <a href="#" class="list-group-item" id="phone">
+                <h4 class="list-group-item-heading">Phone</h4>
+                <p class="list-group-item-text">Official Phone Number of your organization. Would be used to contact your organization</p>
+            </a>
+            <a href="#" class="list-group-item" id="website">
+                <h4 class="list-group-item-heading">Website</h4>
+                <p class="list-group-item-text">Enter the Domain Name of the website of your organization, if any.</p>
+            </a>
+            <a href="#" class="list-group-item" id="pan">
+                <h4 class="list-group-item-heading">PAN</h4>
+                <p class="list-group-item-text">PAN or Permanent Account Number - as assigned by Government of India - Department of Income Tax to your organization</p>
+            </a>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

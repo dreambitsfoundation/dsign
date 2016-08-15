@@ -1,0 +1,32 @@
+/**
+ * Created by Gaurav on 10-07-2016.
+ */
+
+$(document).ready(function(){
+   $("#id_username").focus();
+   $("#username").addClass("active")
+   $("#id_username").focus(function(){
+       $("#username").addClass("active")
+   });
+    $("#id_email").focus(function(){
+       $("#email").addClass("active")
+   });$("#id_password").focus(function(){
+       $("#password").addClass("active")
+   });$("#id_phone").focus(function(){
+       $("#phone").addClass("active")
+   });$("#id_pan").focus(function(){
+       $("#pan").addClass("active")
+   });
+    $("#id_username").blur(function(){
+       $("#username").removeClass("active")
+   });
+    $("#id_email").blur(function(){
+       $("#email").removeClass("active")
+   });$("#id_password").blur(function(){
+       $("#password").removeClass("active")
+   });$("#id_phone").blur(function(){
+       $("#phone").removeClass("active")
+   });$("#id_pan").blur(function(){
+       $("#pan").removeClass("active")
+   });
+});

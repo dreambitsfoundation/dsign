@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <div class="well">
+            <center>
+                <h1>Hi! {% if Log %}{{ Log }}{% endif %}</h1>
+                <h3>Welcome to<strong style="font-family: 'Satisfy', cursive;"> Dsign</strong></h3>
+                <br>
+                <br>
+                <p>DSing allows you and your organization to Digitally Signature documents online and avoid the use of paper medium and communicate through electronic medium.</p>
+                <p>Now you can communicate faster, safer and in an Eco Friendly way.</p>
+            </center>
+        </div>
+        <center><b>Please Sign Up to experience</b></center>
+        <br>
+
+        <a class="btn btn-primary  col-sm-4 col-sm-offset-1" href="{% url 'winker:org_register' %}"><span class="glyphicon glyphicon-tree-deciduous"></span> Signup as Organization</a>
+        &nbsp;
+        <a class="btn btn-primary col-sm-4 col-sm-offset-2" href="{% url 'winker:personal_reg' %}"><span class="glyphicon glyphicon-grain"></span> Signup as Individual</a>
+
+
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+{% endblock %}

@@ -1,0 +1,214 @@
+{% extends 'profile.html' %}
+
+{% block script %}
+    <script>
+        $(document).ready(function(){
+            $("#personal_submit").click(function(){
+                var letter_head=$("#letter_head").val();
+                var addressed_to=$("#addressed_to").val();
+                var comments=$("#comments").val();
+                var subject=$("#subject").val();
+                if(letter_head =="" || addressed_to==""){
+                    alert("Empty Information")
+                }else{
+                   $.ajax(
+                        {
+                            type:'POST',
+                            url:"{% url 'winker:personal_signature' %}",
+                            data:{
+                                'letter_head':letter_head,
+                                'addressed_to':addressed_to,
+                                'comments':comments,
+                                'subject':subject,
+                                'csrfmiddlewaretoken':'{{ csrf_token }}'
+                            },
+                            dataType:'json',
+                            success: function(data){
+                                if(data.success){
+                                    window.open(data.code,"Ghost Window","height=1000,width=700,toolbar=0,location=0,directories=0,menubar=0,status=0");
+                                    $("#letter_head,#addressed_to,#comments,#subject").val("");
+                                }else{
+                                    if(data.reason==1){
+                                        alert("Signing Process Failed.\n Similar data and already exist.")
+                                    }else if(!data.reason){
+                                        alert("Signing Process Failed.\n Server cannot be reached at this moment.")
+                                    }else{
+                                        alert("Signing Process Failed.\n Signature Bank Is Empty. You Need to Refill It");
+                                    }
+                                }
+                            }
+                        }
+                    );
+                }
+
+            });
+        {% if has_org %}
+            $("#professional_submit").click(function(){
+                var letter_head=$("#pro_letter_head").val();
+                var addressed_to=$("#pro_addressed_to").val();
+                var comments=$("#pro_comments").val();
+                var subject=$("#pro_subject").val();
+                if(letter_head =="" || addressed_to==""){
+                    alert("Empty Information")
+                }else{
+                   $.ajax(
+                        {
+                            type:'POST',
+                            url:"{% url 'winker:professional_signature' %}",
+                            data:{
+                                'letter_head':letter_head,
+                                'addressed_to':addressed_to,
+                                'comments':comments,
+                                'subject':subject,
+                                'csrfmiddlewaretoken':'{{ csrf_token }}'
+                            },
+                            dataType:'json',
+                            success: function(data){
+                                if(data.success){
+                                    window.open(data.code,"Ghost Window","height=1000,width=700,toolbar=0,location=0,directories=0,menubar=0,status=0");
+                                    $("#pro_letter_head,#pro_addressed_to,#pro_comments,#pro_subject").val("");
+                                }else{
+                                    if(data.reason==1){
+                                        alert("Signing Process Failed.\n Similar data and already exist.")
+                                    }else if(!data.reason){
+                                        alert("Signing Process Failed.\n Server cannot be reached at this moment.")
+                                    }else if(data.reason==4){
+                                        alert("Signing Process Failed.\n Signature Bank Empty");
+                                    }
+                                }
+                            }
+                        }
+                    );
+                }
+
+            });
+        {% endif %}
+        });
+    </script>
+    {% if has_org %}
+        <script>
+            $(document).ready(function(){
+                $("#personal_signature_panel").hide();
+                $("#professional_signature_panel").hide();
+                $("#sign_personal").click(function(){
+                    $("#professional_signature_panel").hide();
+                    $("#personal_signature_panel").show();
+                });
+                $("#sign_professional").click(function(){
+                    $("#personal_signature_panel").hide();
+                    $("#professional_signature_panel").show();
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+{% block page_content %}
+
+    <div class="col-sm-8">
+        <div class="well">
+            <h1><b>Hello, {{ Log }}.</b></h1>
+            <h3 style="color: dodgerblue;">Welcome to workspace.</h3>
+            <hr>
+            <span>We appreciate you participation and contribution towards saving the environment.</span>
+            <br>
+            <br>
+            <div class="alert alert-success">
+                <p><span class="glyphicon glyphicon-leaf"></span> Great thing is that you have saved {{ savings }}</p>
+            </div>
+        </div>
+        {% if has_org %}
+        <div class="well">
+            <h1>Digital Signature</h1>
+            <hr>
+            <div class="container">
+                <div class="row">
+                    Signature for: <br> <a class="btn btn-info" href="#personal_signature_panel" id="sign_personal"><span class="glyphicon glyphicon-grain"></span> Personal Account</a>{% if has_org %} or <a class="btn btn-primary" href="#professional_signature_panel" id="sign_professional"><span class="glyphicon glyphicon-tree-deciduous"></span> Professional Account</a>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="well" id="personal_signature_panel">
+            <h1>Personal Signature Panel</h1>
+            <hr>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-barcode"></span> Create Signature
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" id="personal_signature_form" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="letter_head">Letter Number:</label>
+                            <input id="letter_head" class="form-control" type="text" name="letter_head" placeholder="Enter Letter Head Number" aria-required="true"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="addressed_to">Addressed To:</label>
+                            <input id="addressed_to" type="text" class="form-control" name="addressed_to" placeholder="Document is Addressed To" required/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="subject">Subject:</label>
+                            <textarea id="subject" class="form-control" name="subject" placeholder="Mention subject"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="comments">Comments:</label>
+                            <textarea id="comments" class="form-control" name="comments" placeholder="Mention Comments if Any"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" id="personal_submit" class="btn btn-success" onclick="return false;"><span class="glyphicon glyphicon-pencil"></span>  Sign It</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% if has_org %}
+        <div class="well" id="professional_signature_panel">
+            <h1>Professional Signature Panel</h1>
+            <hr>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-qrcode"></span> Create Signature
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal" id="professional_signature_form" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="pro_letter_head">Letter Number:</label>
+                            <input id="pro_letter_head" class="form-control col-sm-1" type="text" name="pro_letter_head" placeholder="Enter Letter Head Number"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="pro_addressed_to">Addressed To:</label>
+                            <input id="pro_addressed_to" class="form-control" type="text" name="pro_addressed_to" placeholder="Document is Addressed to"/>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="subject">Subject:</label>
+                            <textarea id="pro_subject" class="form-control" name="subject" placeholder="Mention subject"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="pro_comments">Comments:</label>
+                            <textarea id="pro_comments" class="form-control" name="pro_comments" placeholder="Mention comments if any"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" id="professional_submit" class="btn btn-success" onclick="return false;"><span class="glyphicon glyphicon-pencil"></span>  Sign It</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+    </div>
+    {% if has_org %}
+    <div class="col-sm-4">
+        <div class="well">
+            <b>Your Co-workers</b>
+            <hr>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}            

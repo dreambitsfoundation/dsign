@@ -1,0 +1,40 @@
+{% extends 'org_view.html' %}
+
+{% block page_content %}
+        <div class="well text-center">
+            <h4><strong><span class="glyphicon glyphicon-user"></span> Employee Hive</strong></h4>
+            <br>
+            <b><span class="glyphicon glyphicon-briefcase"></span> {{ org.name }}</b>
+        </div>
+        <div class="well">
+            <div class="text-center"><strong>All your Registered Staffs are listed below</strong></div>
+            <hr>
+            <table class="table table-hover table-striped table-responsive" style="background-color: white;">
+                <thead>
+                    <tr>
+                        <th class="text-center">Sl</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Email ID</th>
+                        <th class="text-center">Designation</th>
+                        <th class="text-center">Total Signatures</th>
+                        <th class="text-center">Active Since</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for this in employee %}
+                        <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td class="text-center">{{ this.username }}</td>
+                            <td class="text-center">{{ this.email }}</td>
+                            <td class="text-center">{{ this.designation }}</td>
+                            <td class="text-center">{{ this.total_signature }}</td>
+                            <td class="text-center">{{ this.date_org_created }}</td>
+                            <td class="text-center"><div class="row"><div class="col-sm-3" data-toggle="popover" data-trigger="hover" title="Refill Signature" data-content="Click this button to Refill Signatures for {{ this.username }}" data-placement="auto bottom"><button class="btn btn-success"><span class="glyphicon glyphicon-qrcode"></span></button></div><div class="col-sm-3" data-toggle="popover" data-trigger="hover" title="Edit Profile Info" data-content="Click the button to Update {{ this.username }}'s Organization Profile Info" data-placement="auto bottom"><button class="btn btn-primary"><span class="glyphicon glyphicon-pencil"></span></button></div><div class="col-sm-3" data-toggle="popover" data-trigger="hover" title="Block User" data-content="Click this Button to Block {{ this.username }}'s Account for Organization Operation" data-placement="auto bottom"><button class="btn btn-danger"><span class="glyphicon glyphicon-ban-circle"></span></button></div></div></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+{% endblock %}

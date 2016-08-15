@@ -1,0 +1,196 @@
+{% extends 'profile.html' %}
+
+{% block page_content %}
+    <style>
+        .white_view{
+            color:white;
+        }
+        td #sign_header{
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        function process(key){
+            $(document).ready(function(){
+                var status_field=$("td[code="+key+"]");
+                var flag_button=$("button[flagkey="+key+"]");
+                status_field.removeClass("success");
+                status_field.addClass("warning");
+                status_field.parent().addClass("warning");
+                status_field.html("Flagged");
+                flag_button.removeClass("btn-default text-danger");
+                flag_button.addClass("white_view btn-danger");
+                flag_button.attr("title","Click here to Un-flag this document");
+            });
+        }
+        $(document).ready(function(){
+           $("button[flagkey]").click(function(){
+                var key=$(this).attr("flagkey");
+                var element=$(this);
+                $.ajax({
+                    type:'POST',
+                    url:"{% url 'winker:flag_check' %}",
+                    data:{
+                        'key':key,
+                        'csrfmiddlewaretoken':"{{ csrf_token }}"
+                    },
+                    dataType:'json',
+                    success: function(data){
+                        if(data.status){
+                            if(data.response){
+                                window.open(data.response);
+                            }else{
+                                var row_notification=$("td[code="+key+"]");
+                                element.removeClass("white_view btn-danger");
+                                element.addClass("text-danger btn-default");
+                                row_notification.removeClass("warning");
+                                row_notification.addClass("success");
+                                row_notification.html("Valid");
+                                row_notification.parent().removeClass("warning");
+                                element.attr("title","Click here to Flag this document and raise objection");
+                            }
+                        }else{
+                            alert("Operation Failed\nReason: "+data.reason);
+                        }
+                    }
+                })
+            });
+           $("button[invalidkey]").click(function(){
+               var key=$(this).attr("invalidkey");
+               var element=$(this);
+               $.ajax({
+                   type:'POST',
+                   url:"{% url 'winker:validity_test' %}",
+                   data:{
+                       'key':key,
+                       'csrfmiddlewaretoken':"{{ csrf_token }}"
+                   },
+                   dataType:'json',
+                   success:function(data){
+                       if(data.status){
+                           window.open(data.url);
+                       }else{
+                           alert("Error: "+data.reason+"\nSorry, But your request ended with an error");
+                       }
+                   }
+               })
+           })
+        });
+        function invalidation_process(key){
+            $(document).ready(function(){
+                var status_field=$("td[code="+key+"]");
+                var invalid_button=$("button[invalidkey="+key+"]");
+                status_field.removeClass("success");
+                status_field.addClass("danger");
+                status_field.parent().addClass("danger");
+                status_field.html("Invalid");
+                invalid_button.removeClass("btn-default text-danger");
+                invalid_button.addClass("white_view btn-danger");
+                invalid_button.attr("title","This Signature Item is Permanently Invalidated");
+                invalid_button.attr("disabled","disabled");
+                $("button[flagkey="+key+"]").attr("disabled","disabled");
+            });
+        }
+    </script>
+    <div class="well">
+        <h1><span class="glyphicon glyphicon-qrcode"></span> Signature Control Window</h1>
+        <hr>
+        <div class="alert alert-info text-center">
+            <span>All your created signatures are listed below.</span>
+        </div>
+    </div>
+    <hr>
+    {% if pro %}
+    <div class="text-center">Professional Signatures</div>
+    <br>
+    <div class="well">
+        <div class="row">
+            <h4 class="col-md-10"><span class="glyphicon glyphicon-tree-deciduous"></span> Professional Signatures</h4>
+            {% if pro_sign %}
+                <div class="col-md-2"><button class="btn btn-default" style="box-shadow: 0px 1px 0px 0px grey;"><span class="glyphicon glyphicon-refresh"></span> Refresh</button></div>
+            {% endif %}
+        </div>
+        <hr>
+        {% if pro_sign %}
+        <table class="table table-bordered table-hover table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th class="text-center">Sr.</th>
+                    <th class="text-center">Header</th>
+                    <th class="text-center">Addressee</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sign in pro_sign %}
+                    <tr{% if sign.is_valid %}{% if sign.is_flagged %} class="warning"{% endif %}{% else %} class="danger"{% endif %} id="{{ sign.code }}">
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <td><a href="{{ sign.url }}" target="_blank" id="sign_header">{{ sign.header }}</a></td>
+                        <td>{{ sign.addressed_to }}</td>
+                        <td>{{ sign.date_created }}</td>
+                        <td code="{{ sign.code }}" {% if sign.is_valid %}{% if sign.is_flagged %} class="warning"{% else %} class="success"{% endif %}{% else %} class="danger"{% endif %}>{% if sign.is_valid %}{% if sign.is_flagged %}Flagged{% else %}Valid{% endif %}{% else %}Invalid{% endif %}</td>
+                        <td><div class="row"><div class="col-sm-5"><button id="invalidate" class="btn {% if not sign.is_valid %}btn-danger white_view{% else %}btn-default text-danger{% endif %}" {% if not sign.is_valid %}disabled{% endif %} title="{% if not sign.is_valid %}This Signature is permanently Invalidated{% else %}Invalidate this Signature{% endif %}" invalidkey="{{ sign.code }}"><span class="glyphicon glyphicon-ban-circle"></span></button></div><div class="col-sm-6"><button id="flag" class="btn {% if sign.is_flagged %}btn-danger white_view{% else %}btn-default text-danger{% endif %}" title="{% if sign.is_valid %}{% if sign.is_flagged %}This document is already Flagged. Click here to Un-Flag this document{% else %}Click to Flag this document and raise objection{% endif %}{% else %}This document is Invalidated, Flagging is Inapplicable{% endif %}" flagkey="{{ sign.code }}" {% if not sign.is_valid %}disabled{% endif %}><span class="glyphicon glyphicon-flag"></span></button></div></div></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="alert alert-warning">
+                <h3><span class="glyphicon glyphicon-alert"></span> Oops! It's a <b>404</b></h3>
+                <hr>
+                <p>You have not signed any document yet.</p>
+                <br>
+                <code>You will start seeing here all the signatures created by you, once you start creating them.</code>
+            </div>
+        {% endif %}
+        </div>
+        <hr>
+    {% endif %}
+    <div class="text-center"><span>Personal Signatures</span></div>
+    <br>
+    <div class="well">
+        <div class="row">
+            <div class="col-md-10"><h4><span class="glyphicon glyphicon-grain"></span> Personal Signatures</h4></div>
+            {% if personal_sign %}
+                <div class="col-md-2"><button class="btn btn-default" style="box-shadow: 0px 1px 0px 0px gray;"><span class="glyphicon glyphicon-refresh"></span> Refresh</button></div>
+            {% endif %}
+        </div>
+        <hr>
+        {% if personal_sign %}
+            <table class="table table-bordered table-hover table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th class="text-center">Sl.</th>
+                        <th class="text-center">Header</th>
+                        <th class="text-center">Addressee</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sign in personal_sign %}
+                        <tr{% if sign.is_valid %}{% if sign.is_flagged %} class="warning"{% endif %}{% else %} class="danger"{% endif %} id="{{ sign.code }}">
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td><a href="{{ sign.url }}" target="_blank" id="sign_header">{{ sign.header }}</a></td>
+                            <td>{{ sign.addressed_to }}</td>
+                            <td>{{ sign.date_created }}</td>
+                            <td code="{{ sign.code }}" {% if sign.is_valid %}{% if sign.is_flagged %} class="warning"{% else %} class="success"{% endif %}{% else %} class="danger"{% endif %}>{% if sign.is_valid %}{% if sign.is_flagged %}Flagged{% else %}Valid{% endif %}{% else %}Invalid{% endif %}</td>
+                            <td><button class="btn {% if sign.is_flagged %}btn-danger white_view{% else %}btn-default text-danger{% endif %}" title="{% if sign.is_valid %}{% if sign.is_flagged %}Click here to Un-Flag this item{% else %}Flag this item and raise objection{% endif %}{% else %}This Signature is permanently Invalidated. Flagging is not applicable{% endif %}" flagkey="{{ sign.code }}" {% if not sign.is_valid %}disabled{% endif %}><span class="glyphicon glyphicon-flag"></span></button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-warning">
+                <h3><span class="glyphicon glyphicon-alert"></span> Oops! It's a <b>404</b></h3>
+                <hr>
+                <p>You have not signed any document yet.</p>
+                <br>
+                <code>You will start seeing here all the signatures created by you, once you start creating them.</code>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

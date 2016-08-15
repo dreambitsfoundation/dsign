@@ -1,0 +1,101 @@
+{% extends 'org_view.html' %}
+
+{% block page_content %}
+    <script>
+     var csrfmiddlewaretoken="{{ csrf_token }}";
+    </script>
+    {% load staticfiles %}
+    <script type="text/javascript" src="{% static 'org_sign_control.js' %}"></script>
+
+    <div id="invalidation_popup" style="position: fixed; height:100%; width:100%; top:0px; left:0px; background-color: rgba(255,255,255,0.8); z-index:10;" hidden>
+        <div class="container">
+            <div class="col-sm-12">
+                <div class="well" style="margin-top:10%;">
+                    <h3 class="text-danger"><span class="glyphicon glyphicon-ban-circle"></span> Invalidation Window</h3>
+                    <hr>
+                    <blockquote> You are about to Invalidate Signature Code: <b id="key"></b>
+                        <p>Please Note: <b>This is an Irreversible process.</b></p>
+                    </blockquote>
+                    <br>
+                    <form class="form-group">
+                        <div class="alert alert-danger" id="error_msg">Please Check And Re-enter</div>
+                        Enter Reason of Invalidation:
+                        <br>
+                        <textarea id="invalidation_reason" class="form-control" placeholder="Enter Reason For Invalidating the Document."></textarea>
+                        <br>
+                        <a class="btn btn-danger btn-sm invalidator" id="invalidate"><span class="glyphicon glyphicon-ban-circle"></span> Invalidate</a> &nbsp;<a id="invalidation_window_close">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="well">
+        <h3><span class="glyphicon glyphicon-qrcode"></span> Signature Control</h3>
+        <div class="tect-center"><span class="glyphicon glyphicon-briefcase"></span> {{ user.org.name }}</div>
+    </div>
+    <div class="well">
+        This page Index all the Signatures generated from <b>{{ user.org.name }}</b>
+    </div>
+    <div class="well">
+        <h5><span class="glyphicon glyphicon-list-alt"></span> Signatures List</h5>
+        <hr>
+        <div class="container-fluid"  style="overflow-x: scroll;">
+            <table class="table table-hover table-bordered table-responsive table-striped" style="overflow-x: scroll;">
+                <thead>
+                    <tr>
+                        <th>Sl</th>
+                        <th>Header</th>
+                        <th>Issuer</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for this in sign %}
+                        <tr key="{{ this.code }}" {% if not this.is_valid %}class="danger"{% elif this.is_haulted %}class="warning"{% endif %}>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="{{ this.url }}" target="_blank" data-toggle="tooltip" title="Click to see the Public Database Record of this Signature">{{ this.header }}</a></td>
+                            <td>{{ this.created }}</td>
+                            <td>{{ this.date_created }}</td>
+                            <td {% if this.is_valid %}{% if this.is_flagged %}class="warning"{% elif this.is_haulted %}class="warning"{% else %}class="success"{% endif %}{% else %}class="danger"{% endif %}>{% if this.is_valid %}{% if this.is_haulted %}Haulted{% elif this.is_flagged %}Flagged{% else %}Valid{% endif %}{% else %}Invalid{% endif %}</td>
+                            <td>
+                                <div class="dropdown">
+                                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Action
+                                    <span class="caret"></span>
+                                  </button>
+                                  <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                                    {% if this.is_valid %}
+                                        {% if this.is_haulted %}
+                                            {% if not this.hault_user_permission %}
+                                                <li><a key="{{ this.code }}" id="grant_user_permission" onclick="control_request(key='{{ this.code }}',action='grant_user_permission')"><span class="glyphicon glyphicon-ok text-success"></span> Grant Usage Permission</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a key="{{ this.code }}" id="unhault" onclick="control_request(key='{{ this.code }}',action='unhault')"><span class="glyphicon glyphicon-ok-circle text-success"></span> Un-Hault</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a code="{{ this.code }}" id="invalidate" onclick="invalidation_request(key='{{ this.code }}',action='invalidate')"><span class="glyphicon glyphicon-ban-circle text-danger"></span> Invalidate Signature</a></li>
+                                            {% else %}
+                                                <li><a key="{{ this.code }}" id="revoke_user_permission" onclick="control_request(key='{{ this.code }}',action='revoke_user_permission')"><span class="glyphicon glyphicon-remove text-danger"></span> Revoke Usage Permission</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a key="{{ this.code }}" id="unhault" onclick="control_request(key='{{ this.code }}',action='unhault')"><span class="glyphicon glyphicon-ok-circle text-success"></span> Un-Hault</a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a code="{{ this.code }}" id="invalidate" onclick="invalidation_request(key='{{ this.code }}',action='invalidate')"><span class="glyphicon glyphicon-ban-circle text-danger"></span> Invalidate Signature</a></li>
+                                            {% endif %}
+                                        {% else %}
+                                            <li><a key="{{ this.code }}" id="hault_grant_user_permission" onclick="control_request(key='{{ this.code }}',action='hault_grant_user_permission')"><span class="glyphicon glyphicon-ok text-success"></span> Hault With Usage Permission</a></li>
+                                            <li><a key="{{ this.code }}" id="hault_revoke_user_permission" onclick="control_request(key='{{ this.code }}',action='hault_revoke_user_permission')"><span class="glyphicon glyphicon-remove text-danger"></span> Hault Without Usage Permission</a></li>
+                                        {% endif %}
+                                    {% else %}
+                                        <li class="danger"><a key="{{ this.code }}" id="delete" onclick="control_request(key='{{ this.code }}',action='delete')"><span class="glyphicon glyphicon-trash text-danger"></span> Delete Signature</a></li>
+                                    {% endif %}
+                                  </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

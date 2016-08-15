@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invalidation Handler Window</title>
+    {% load staticfiles %}
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'jquery/jquery-1.11.3.min.js' %}"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color: lawngreen;">
+    <header>
+        <div class="container">
+            <h3 class="text-success text-center" style="font-family: 'Satisfy', cursive"><span class="glyphicon glyphicon-leaf"></span> DSign</h3>
+        </div>
+    </header>
+    <br>
+    <div class="container">
+        {% if status %}
+            <script>
+                $(document).ready(function(){
+                    $("#invalid_reason").focus();
+                    $("#invalid_submit").click(function(){
+                        var reason=$("#invalid_reason").val();
+                        if(reason!=""){
+                            $.ajax({
+                                type:'POST',
+                                url:"{% url 'winker:invalidation_result' %}",
+                                data:{
+                                    'key':"{{ key }}",
+                                    'invalidation_reason':reason,
+                                    'csrfmiddlewaretoken':"{{ csrf_token }}",
+                                },
+                                dataType:'json',
+                                success:function(data){
+                                    if(data.status){
+                                        window.opener.invalidation_process(key="{{ key }}");
+                                        window.close();
+                                    }else{
+                                        alert("error arosen");
+                                    }
+                                }
+                            })
+                        }
+                    })
+                })
+            </script>
+            <div class="well">
+            <h3 class="text-danger"><span class="glyphicon glyphicon-ban-circle"></span> Invalidation Window</h3>
+            <hr>
+            <div class="alert alert-info">
+                <h4><span class="glyphicon glyphicon-info-sign"></span> Please Note</h4>
+                <br>
+                We expect that you have a valid reason for <b>Invalidating</b> this <b>Signature</b>.
+                The <b>Cause of Action</b> or the <b>Reason</b> you are going to mention below will be publically visible and eventually the bearer of any doccument associated with this signature would be treated as such.
+                <blockquote>This is an <b>Irreversible Operation</b>.</blockquote>
+            </div>
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h4><b><span class="glyphicon glyphicon-question-sign"></span> Cause of Action</b></h4>
+                </div>
+                <div class="panel-body">
+                    <blockquote>
+                        Please mention a valid reason, in regards to your action.
+                        <br>
+                        May be you need some time to take final decission. Take your time, no one is in hurry.
+                    </blockquote>
+                    <br>
+                    <div class="alert alert-warning">
+                        <form class="form-group">
+                            {{ csrfmiddlewaretoken }}
+                            <label class="label label-warning" for="#invalid_reason"><b>Cause of Action:</b></label>
+                            <textarea id="invalid_reason" name="invalid_reason" class="form-control" required placeholder="Enter the reason for Invalidtion of this document"></textarea>
+                            <br>
+                            <button class="btn btn-danger btn-block" id="invalid_submit" onclick="return false;"><span class="glyphicon glyphicon-ban-circle"></span> Invalidate This Signature!</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <blockquote class="blockquote-reverse text-left"><span class="glyphicon glyphicon-eye-open"></span> DSign takes no responsibility over any mistakes made by users.</blockquote>
+                </div>
+            </div>
+            <center>&copy; Project DSign. All Rights Reserved.</center>
+            <b>status</b>{{ status }},<b>key</b>{{ key }}
+            </div>
+        {% else %}
+            <div class="well">
+                <div class="alert alert-danger">
+                    <h3><span class="glyphicon glyphicon-fire"></span>Error: {{ reason }}</h3>
+                    <hr>
+                    <p>
+                        <code>Process ended with an error.</code>
+                        Please operate through proper medium to avoid errors generated due to invalid requests.
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

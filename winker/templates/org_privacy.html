@@ -1,0 +1,112 @@
+{% extends 'org_view.html' %}
+
+{% block page_content %}
+    <div class="well">
+        <h4><span class="glyphicon glyphicon-lock"></span> Profile Content Privacy</h4>
+        <hr>
+        <div class="text-center"><span class="glyphicon glyphicon-briefcase"></span> {{ org.name }}</div>
+    </div>
+    <div class="well">
+        <h5><span class="glyphicon glyphicon-tower"></span> Organization Data Privacy</h5>
+        <hr>
+        <blockquote>
+            The preferences you set here will be followed for every staff of this organization in their <b>Professional Account</b>
+            over their personal preferences.
+            <br>
+            These settings will have no effect on their <b>Personal Profile</b>
+        </blockquote>
+        <div class="alert alert-info">
+            <h4><span class="glyphicon glyphicon-eye-open"></span> Information Permanently Visible</h4>
+            <hr>
+            Name of Organization: <b>{{ user.org.name }}</b>
+            <br>
+            Official Email Address: <b type="email">{{ user.org.contact_mail }}</b>
+        </div>
+        <div class="container-fluid">
+            <div class="col-sm-6">
+               <div class="panel panel-primary">
+                   <div class="panel-heading">
+                       <h5><span class="glyphicon glyphicon-earphone"></span> Phone Number</h5>
+                   </div>
+                   <div class="panel-body">
+                        <blockquote class="info blockquote-reverse"> {{ user.org.phone }}</blockquote>
+                       <div class="alert alert-info">
+                            <div class="container">
+                                <div class="row">
+                                    <button prop="personal_phone" info="Phone Number" class="btn {% if personal_phone %}btn-danger{% else %}btn-success{% endif %}"><span class="glyphicon {% if personal_phone %}glyphicon-remove{% else %}glyphicon-ok{% endif %}"></span></button>
+                                    <strong class="col-sm-offset-1" prop="personal_phone"> {% if personal_phone %}Hide Our Contact Number{% else %}Show Our Contact Number{% endif %}</strong>
+                                </div>
+                            </div>
+                       </div>
+                   </div>
+                   <div class="panel-footer">
+                       <p class="text-center" prop="personal_phone"> <b>Now: </b><span class="glyphicon {% if personal_phone %}glyphicon-eye-open{% else %}glyphicon-eye-close{% endif %}"></span> {% if personal_phone %}Visible{% else %}Invisible{% endif %}</p>
+                   </div>
+               </div>
+            </div>
+            <div class="col-sm-6">
+               <div class="panel panel-primary">
+                   <div class="panel-heading">
+                       <h5><span class="glyphicon glyphicon-link"></span> Website</h5>
+                   </div>
+                   <div class="panel-body">
+                        <blockquote class="info blockquote-reverse"> {{ user.org.website }}</blockquote>
+                       <div class="alert alert-info">
+                            <div class="container">
+                                <div class="row">
+                                    <button prop="personal_phone" info="Phone Number" class="btn {% if personal_phone %}btn-danger{% else %}btn-success{% endif %}"><span class="glyphicon {% if personal_phone %}glyphicon-remove{% else %}glyphicon-ok{% endif %}"></span></button>
+                                    <strong class="col-sm-offset-1" prop="personal_phone"> {% if personal_phone %}Hide Our Web Address{% else %}Show Our Web Address{% endif %}</strong>
+                                </div>
+                            </div>
+                       </div>
+                   </div>
+                   <div class="panel-footer">
+                       <p class="text-center" prop="personal_phone"> <b>Now: </b><span class="glyphicon {% if personal_phone %}glyphicon-eye-open{% else %}glyphicon-eye-close{% endif %}"></span> {% if personal_phone %}Visible{% else %}Invisible{% endif %}</p>
+                   </div>
+               </div>
+            </div>
+            <div class="col-sm-6">
+               <div class="panel panel-primary">
+                   <div class="panel-heading">
+                       <h5><span class="glyphicon glyphicon-map-marker"></span> Address</h5>
+                   </div>
+                   <div class="panel-body">
+                        <blockquote class="info blockquote-reverse"> {{ user.org.address }}</blockquote>
+                       <div class="alert alert-info">
+                            <div class="container">
+                                <div class="row">
+                                    <button prop="personal_phone" info="Phone Number" class="btn {% if personal_phone %}btn-danger{% else %}btn-success{% endif %}"><span class="glyphicon {% if personal_phone %}glyphicon-remove{% else %}glyphicon-ok{% endif %}"></span></button>
+                                    <strong class="col-sm-offset-1" prop="personal_phone"> {% if personal_phone %}Hide Our Postal Address{% else %}Show Our Postal Address{% endif %}</strong>
+                                </div>
+                            </div>
+                       </div>
+                   </div>
+                   <div class="panel-footer">
+                       <p class="text-center" prop="personal_phone"> <b>Now: </b><span class="glyphicon {% if personal_phone %}glyphicon-eye-open{% else %}glyphicon-eye-close{% endif %}"></span> {% if personal_phone %}Visible{% else %}Invisible{% endif %}</p>
+                   </div>
+               </div>
+            </div>
+            <div class="col-sm-6">
+               <div class="panel panel-primary">
+                   <div class="panel-heading">
+                       <h5><span class="glyphicon glyphicon-leaf"></span> Total Papers Saved</h5>
+                   </div>
+                   <div class="panel-body">
+                        <blockquote class="info blockquote-reverse"> {{ user }}</blockquote>
+                       <div class="alert alert-info">
+                            <div class="container">
+                                <div class="row">
+                                    <button prop="personal_phone" info="Phone Number" class="btn {% if personal_phone %}btn-danger{% else %}btn-success{% endif %}"><span class="glyphicon {% if personal_phone %}glyphicon-remove{% else %}glyphicon-ok{% endif %}"></span></button>
+                                    <strong class="col-sm-offset-1" prop="personal_phone"> {% if personal_phone %}Hide Our Contribution{% else %}Show Our Contribution{% endif %}</strong>
+                                </div>
+                            </div>
+                       </div>
+                   </div>
+                   <div class="panel-footer">
+                       <p class="text-center" prop="personal_phone"> <b>Now: </b><span class="glyphicon {% if personal_phone %}glyphicon-eye-open{% else %}glyphicon-eye-close{% endif %}"></span> {% if personal_phone %}Visible{% else %}Invisible{% endif %}</p>
+                   </div>
+               </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

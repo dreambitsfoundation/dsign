@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% block body %}
+    {% if record %}
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+        </script>
+        <div class="container">
+            <div class="well">
+                <h1 class="text-center text-success"><span class="glyphicon glyphicon-leaf"></span> DSign Record Exist</h1>
+                <hr>
+                {% if sign.is_valid %}
+                    {% if sign.is_haulted %}
+                        <div class="alert alert-warning">
+                            <h2><span class="glyphicon glyphicon-warning-sign"></span> Alert!</h2>
+                            This Document has been Haulted for Review by the Administrator.
+                        </div>
+                    {% elif sign.is_flagged %}
+                        <div class="alert alert-warning">
+                            <h2><span class="glyphicon glyphicon-flag"></span> Alert!</h2>
+                            This document is valid at this moment, but objection has been raised with respect to this document.
+                            <br>
+                            <b>Reason: </b>{{ flag_reason }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success">
+                            <h2><span class="glyphicon glyphicon-thumbs-up"></span> Congratulation!</h2>
+                            This document is valid at this time which ensures legal utilization of the document.
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-danger">
+                        <h2><span class="glyphicon glyphicon-thumbs-down"></span> Sorry!</h2>
+                        This document is inactive at this time, which may cause restricted usage of a document. Refer to signatory's guidelines for information about usage rights of the document.
+                    </div>
+                {% endif %}
+                <div class="panel {% if sign.is_valid %}panel-primary{% else %}panel-danger{% endif %}">
+                    <div class="panel-heading">
+                        <b>Signature Code Applied:</b> {{ sign.code }}
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-12">
+                            <table class="table table-hover table-bordered align-center table-striped">
+                                <thead>
+                                    <tr class="info">
+                                        <th>Content</th>
+                                        <th>Information</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if sign %}
+                                        <tr>
+                                            <th>Header:</th>
+                                            <td>{{ sign.header }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Subject:</th>
+                                            <td>{{ sign.subject }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Addressed To:</th>
+                                            <td>{{ sign.addressed_to }}</td>
+                                        </tr>
+                                        {% if org %}
+                                        <tr>
+                                            <th>Issuing Organization:</th>
+                                            <td>{{ org.name }}</td>
+                                        </tr>
+                                        {% if org.show_staff_mail %}
+                                            {% if user_privacy.professional_result_email %}
+                                                <tr>
+                                                    <th>Signature Created By (On behalf of the Organization):</th>
+                                                    <td>{{ sign.created }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if org.show_staff_phone %}
+                                            {% if user_privacy.professional_result_phone_number %}
+                                                <tr>
+                                                    <th>Signatory's Contact Details</th>
+                                                    <td>{{ signatory.phone }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endif %}
+                                        <tr>
+                                            <th>Organization Mail ID:</th>
+                                            <td>{{ org.contact_mail }}</td>
+                                        </tr>
+                                            {% if org.show_phone %}
+                                                <tr>
+                                                    <th>Organizational Contact Number:</th>
+                                                    <td>{{ org.phone }}</td>
+                                                </tr>
+                                            {% endif %}
+                                            {% if org.show_website %}
+                                                {% if org.website %}
+                                                    <tr>
+                                                        <th>Organizational Official Website:</th>
+                                                        <td>{{ org.website }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            {% if user_privacy.personal_result_email %}
+                                                <tr>
+                                                    <th>Signature Created By:</th>
+                                                    <td>{{ sign.created }}</td>
+                                                </tr>
+                                            {% endif %}
+                                            {% if user_privacy.personal_result_phone_number %}
+                                                <tr>
+                                                    <th>Contact Number:</th>
+                                                    <td>{{ signatory.phone }}</td>
+                                                </tr>
+                                            {% endif %}
+                                            <tr>
+                                                <th>Valid Since:</th>
+                                                <td>{{ sign.date_created }}</td>
+                                            </tr>
+                                            {% if user_privacy.personal_result_gender %}
+                                                {% if signatory.gender %}
+                                                    <tr>
+                                                        <th>Gender:</th>
+                                                        <td data-toggle="tooltip" title="M - Male. F - Female. O - Other">{{ signatory.gender }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if user_privacy.personal_result_address %}
+                                                {% if signatory.address %}
+                                                    <tr>
+                                                        <th>Address:</th>
+                                                        <td>{{ signatory.address }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if not sign.is_valid %}
+                                            <tr class="danger">
+                                                <th>Invalidated By:</th>
+                                                <td>{{ sign.invalidated_by }}</td>
+                                            </tr>
+                                            <tr class="danger">
+                                                <th>Invalidated On:</th>
+                                                <td>{{ sign.invalidated_on }}</td>
+                                            </tr>
+                                            <tr class="danger">
+                                                <th>Reason of Invalidation:</th>
+                                                <td>{{ sign.invalidated_reason }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endif %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    {% else %}
+        <div class="container">
+            <div class="well">
+                <div class="alert alert-danger">
+                    <h1><strong><span class="glyphicon glyphicon-fire"></span> Sorry!</strong></h1>
+                    <span>No such record exists in &nbsp;<b><a href="{% url 'winker:index' %}" style="text-decoration: none; color: brown"><span class="glyphicon glyphicon-leaf"></span><b style="font-family:'Satisfy',cursive;"> DSign</b> Database.</a></b></span>
+                    <br>
+                    <br>
+                    <hr>
+                    Please re-check the signature code and try again.
+                    <h3><span class="glyphicon glyphicon-info-sign"></span> You can also use the <strong><span class="glyphicon glyphicon-qrcode"></span> Qr-Code</strong> or <strong><span class="glyphicon glyphicon-barcode"></span> Barcode</strong> associated with the signature code, if attached to the document.</h3>
+                </div>
+                <div class="alert alert-warning">
+                    <span class="glyphicon glyphicon-exclamation-sign"></span> If you are seeing this, there remains a probability that you may be into a documentation forgery. In such condition please confirm and may take legal action in response to it.
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="container">
+        <div class="well">
+            <h2 class="text-warning"><span class="glyphicon glyphicon-bell"></span> Please Note</h2>
+            <hr>
+            <div class="jumbotron">
+                DSign is the hosting body of this public database. All the operations related to the digital signature services such as Creation, Maintainence, Updation and Deletion are maintained by the subscribers as Individuals or Organization.
+                <br>
+                Hence, Team DSign declares hereby that DSign - Digital Signature Services directly or indirectly takes no responsibility over mistakes or misinterpritation of information by its subscribers in any way, intentionally or un-intentionally.
+            </div>
+        </div>
+    </div>
+{% endblock %}

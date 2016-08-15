@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block script %}<script src="{% static 'login.js' %}"></script>{% endblock %}
+{% block body %}
+    <div class="container">
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Login</strong>
+                </div>
+                <div class="panel-body">
+
+                    {% if error_message %}
+                        <div class="alert alert-danger">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span><strong> Oops! </strong> {{ error_message }}
+                        </div>
+                    {% endif %}
+                    <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="id_email">
+                                Email:
+                            </label>
+                            <div class="col-sm-10">
+                                <input id="id_email" class="form-control" maxlength="30" name="email" type="email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="id_password">
+                                Password:
+                            </label>
+                            <div class="col-sm-10">
+                                <input id="id_password" class="form-control" maxlength="30" name="password" type="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-log-in"></span>  Login</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="panel-footer">
+                    Don't have an account? <a href="{% url 'winker:personal_reg' %}">Click here</a> to register.
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="list-group">
+                <a href="#" class="list-group-item" id="email">
+                    <h4 class="list-group-item-heading">Email</h4>
+                    <p class="list-group-item-text">Enter your Email Id that you used to register with us</p>
+                </a>
+                <a href="#" class="list-group-item" id="password">
+                    <h4 class="list-group-item-heading">Password</h4>
+                    <p class="list-group-item-text">Enter the Password you used to register with us</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <br><br><br><br><br><br><br>
+
+{% endblock %}

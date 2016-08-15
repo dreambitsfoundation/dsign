@@ -1,0 +1,57 @@
+{% extends 'profile.html' %}
+
+{% block page_content %}
+    <div class="well" id="user_info">
+                <h2 class=""><span class="glyphicon glyphicon-dashboard"></span> Dashboard</h2>
+                <hr>
+
+                    <h3 class="">Hello, {{ Log }}</h3>
+                    {% if org %}
+                        <span class="">
+                            Organization Operation Under: <b>{{ org }}</b>
+                        </span>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <span>Are you connected to any Organization or Would you like to start your Organizational Account?    &nbsp;</span>
+                            <button class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Add Organization
+                            </button>
+                        </div>
+                    {% endif %}
+
+            </div>
+            <div class="well" id="account_info">
+                <h4><span class="glyphicon glyphicon-info-sign"></span> Account Details</h4>
+                <hr>
+                <div class="jumbotron" id="personal_account_info">
+                    <h3><span class="glyphicon glyphicon-grain"></span> Personal Account</h3>
+                    <hr>
+                    <div class="container">
+                        <span>Total Signatures Purchased: <b>{{ total_personal_sign }}</b></span>
+                        <br>
+                        <br>
+                        <span>Signatures Left:{{ personal_signatures_left }}</span>
+                        <br><br>
+                        <div class="progress" >
+                            <div class="progress-bar progress-bar-primary progress-bar-striped active" id="per_progress" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
+                        </div>
+                        <a class="btn btn-success" href="#"><span class="glyphicon glyphicon-piggy-bank"></span> Get More Signatures</a>
+                    </div>
+                </div>
+                <div class="jumbotron" id="org_account_info">
+                    <h3><span class="glyphicon glyphicon-tree-deciduous"></span> Professional Account</h3>
+                    <hr>
+                    <div class="container">
+                        <span>Total Signatures Allotted: <b>{{ total_personal_sign }}</b></span>
+                        <br>
+                        <br>
+                        <span>Signatures Left:{{ personal_signatures_left }}</span>
+                        <br><br>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-primary progress-bar-striped active" id="pro_progress" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
+                        </div>
+                         <a class="btn btn-success" href="#"><span class="glyphicon glyphicon-flash"></span> Request More Signatures</a>
+                    </div>
+                </div>
+            </div>
+{% endblock %}

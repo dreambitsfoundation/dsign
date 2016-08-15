@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if record %}Code View : {{ code }}{% else %}Error!{% endif %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
+    <style>
+        header{
+            top:0;
+            width:100%;
+            position: fixed;
+            z-index: 1;
+            background-color: black;
+            height:90px;
+            color:lawngreen;
+            font-family: 'Satisfy', cursive;
+        }
+        footer{
+            background-color: #0f0f0f;
+            color:white;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $("#url-link").focus();
+        });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <header>
+        <center>
+            <h1><span class="glyphicon glyphicon-leaf"></span> DSign</h1>
+        </center>
+    </header>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+        <div class="well">
+            <div class="alert {% if record %}alert-success{% else %}alert-warning{% endif %}">
+            <h2>
+                {% if record %}
+                    <span class="glyphicon glyphicon-thumbs-up"></span> Success!
+                {% else %}
+                    <span class="glyphicon glyphicon-alert"></span> Sorry!
+                {% endif %}
+            </h2>
+                {% if record %}
+                    <hr>
+                    <strong>Signature Code:</strong> {{ code }}
+                {% else %}
+                    <hr>
+                    {{ error_message }}
+                {% endif %}
+            </div>
+        </div>
+
+        {% if record %}
+            <div class="well">
+                <div class="alert alert-info">
+                    <h3><span class="glyphicon glyphicon-info-sign"></span> Your Signature has been registered!</h3>
+                    <p>Now you can either mention this link</p>
+                    <div class="input-group">
+                        <span class="input-group-addon">Signature URL</span>
+                        <input class="form-control active" aria-disabled="true" id="url-link" value="{{ url }}" placeholder="Signature link goes here" disabled style="cursor: text; z-index:0"/>
+                    </div>
+                </div>
+                    <hr>
+                    <center>
+                        <strong class="text-center text-muted">
+                            Or
+                        <br>
+                        Download and paste any of these codes in your document.
+                        </strong>
+                    </center>
+                    <br>
+                <div class="container">
+                    <div class="col-sm-6 col-md-5">
+                        <div class="jumbotron">
+                            <h3><span class="glyphicon glyphicon-qrcode"></span> Qr-Code</h3>
+                            <hr>
+                            <img class="img-thumbnail center-block" src="{{ qr_code }}" alt="#" title="You can also Copy-Paste this image"/>
+                            <br>
+                            <br>
+                            <a class="btn btn-primary btn-block" href="{{ qr_code }}" download title="You can also Copy-Paste this image"><span class="glyphicon glyphicon-save"> </span> Download Qr-Code</a>
+                        </div>
+                    </div>
+                    <div class="col-sm-offset-1 col-sm-6 col-md-5">
+                        <div class="jumbotron">
+                            <h3><span class="glyphicon glyphicon-barcode"></span> Bar Code</h3>
+                            <hr>
+                            <br>
+                            <img src="{{ bar_code }}" alt="#" height="300" width="300" class="img-thumbnail center-block" title="You can also Copy-Paste this image"/>
+                            <br>
+                            <br>
+                            <a class="btn btn-primary btn-block" href="{{ bar_code }}" download title="You can also Copy-Paste this image"><span class="glyphicon glyphicon-save"> </span> Download Barcode</a>
+                        </div>
+                        <div class="alert alert-warning">
+                            <h4><span class="glyphicon glyphicon-alert"></span> Please Note!</h4>
+                            <strong>Barcodes</strong> being wider in size are sometimes difficult to be scanned using cameras of mobile devices.
+                            You may want to avoid using <strong>Barcodes</strong> if your document is not subjected to be scanned using a <strong>Barcode Scanner</strong>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="well">
+                <h2 class="text-warning"><span class="glyphicon glyphicon-bell"></span> Please Note</h2>
+                <hr>
+                <div class="jumbotron">
+                    DSign is the hosting body of this public database. All the operations related to the digital signature services such as Creation, Maintainence, Updation and Deletion are maintained by the subscribers as Individuals or Organization.
+                    <br>
+                    Hence, Team DSign declares hereby that DSign - Digital Signature Services directly or indirectly takes no responsibility over mistakes, misuse or misinterpritation of information by its subscribers in any way, intentionally or un-intentionally.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+   <footer>
+       <div class="container">
+           <h4>&copy; Agiloscope Inc. Project DSign</h4>
+       </div>
+   </footer>
+</body>
+</html>
